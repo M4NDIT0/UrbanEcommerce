@@ -1,0 +1,69 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Armando Nu\u00F1ez\\Desktop\\103_SistemaEcommerceBlazorNet7-main\\103_SistemaEcommerceBlazorNet7-main\\BlazorEcommerce\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{FDBB551E-B456-4AA9-A0AB-5CE56EE8F929}|BlazorEcommerce\\Client\\BlazorEcommerce.Client.csproj|c:\\users\\armando nu\u00F1ez\\desktop\\103_sistemaecommerceblazornet7-main\\103_sistemaecommerceblazornet7-main\\blazorecommerce\\blazorecommerce\\client\\shared\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{FDBB551E-B456-4AA9-A0AB-5CE56EE8F929}|BlazorEcommerce\\Client\\BlazorEcommerce.Client.csproj|solutionrelative:blazorecommerce\\client\\shared\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FDBB551E-B456-4AA9-A0AB-5CE56EE8F929}|BlazorEcommerce\\Client\\BlazorEcommerce.Client.csproj|c:\\users\\armando nu\u00F1ez\\desktop\\103_sistemaecommerceblazornet7-main\\103_sistemaecommerceblazornet7-main\\blazorecommerce\\blazorecommerce\\client\\wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{FDBB551E-B456-4AA9-A0AB-5CE56EE8F929}|BlazorEcommerce\\Client\\BlazorEcommerce.Client.csproj|solutionrelative:blazorecommerce\\client\\wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{88635D89-3DF9-4C71-AF92-69EF489EDAB8}|BlazorEcommerce\\Server\\BlazorEcommerce.Server.csproj|c:\\users\\armando nu\u00F1ez\\desktop\\103_sistemaecommerceblazornet7-main\\103_sistemaecommerceblazornet7-main\\blazorecommerce\\blazorecommerce\\server\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{88635D89-3DF9-4C71-AF92-69EF489EDAB8}|BlazorEcommerce\\Server\\BlazorEcommerce.Server.csproj|solutionrelative:blazorecommerce\\server\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "NavMenu.razor",
+              "DocumentMoniker": "C:\\Users\\Armando Nu\u00F1ez\\Desktop\\103_SistemaEcommerceBlazorNet7-main\\103_SistemaEcommerceBlazorNet7-main\\BlazorEcommerce\\BlazorEcommerce\\Client\\Shared\\NavMenu.razor",
+              "RelativeDocumentMoniker": "BlazorEcommerce\\Client\\Shared\\NavMenu.razor",
+              "ToolTip": "C:\\Users\\Armando Nu\u00F1ez\\Desktop\\103_SistemaEcommerceBlazorNet7-main\\103_SistemaEcommerceBlazorNet7-main\\BlazorEcommerce\\BlazorEcommerce\\Client\\Shared\\NavMenu.razor",
+              "RelativeToolTip": "BlazorEcommerce\\Client\\Shared\\NavMenu.razor",
+              "ViewState": "AgIAABsAAAAAAAAAAAAUwCkAAABJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-08T23:46:19.739Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "index.html",
+              "DocumentMoniker": "C:\\Users\\Armando Nu\u00F1ez\\Desktop\\103_SistemaEcommerceBlazorNet7-main\\103_SistemaEcommerceBlazorNet7-main\\BlazorEcommerce\\BlazorEcommerce\\Client\\wwwroot\\index.html",
+              "RelativeDocumentMoniker": "BlazorEcommerce\\Client\\wwwroot\\index.html",
+              "ToolTip": "C:\\Users\\Armando Nu\u00F1ez\\Desktop\\103_SistemaEcommerceBlazorNet7-main\\103_SistemaEcommerceBlazorNet7-main\\BlazorEcommerce\\BlazorEcommerce\\Client\\wwwroot\\index.html",
+              "RelativeToolTip": "BlazorEcommerce\\Client\\wwwroot\\index.html",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2025-10-08T23:32:16.54Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\Armando Nu\u00F1ez\\Desktop\\103_SistemaEcommerceBlazorNet7-main\\103_SistemaEcommerceBlazorNet7-main\\BlazorEcommerce\\BlazorEcommerce\\Server\\appsettings.json",
+              "RelativeDocumentMoniker": "BlazorEcommerce\\Server\\appsettings.json",
+              "ToolTip": "C:\\Users\\Armando Nu\u00F1ez\\Desktop\\103_SistemaEcommerceBlazorNet7-main\\103_SistemaEcommerceBlazorNet7-main\\BlazorEcommerce\\BlazorEcommerce\\Server\\appsettings.json",
+              "RelativeToolTip": "BlazorEcommerce\\Server\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-10-01T05:19:52.765Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
