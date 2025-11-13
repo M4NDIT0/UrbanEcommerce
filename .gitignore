@@ -1,0 +1,150 @@
+# Build Results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio cache/options directory
+.vs/
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# Rider
+.idea/
+*.sln.iml
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Test Results
+TestResults/
+*.trx
+*.coverage
+
+# NuGet
+*.nupkg
+*.snupkg
+*.nuget.props
+*.nuget.targets
+
+# Entity Framework
+*.edmx.diagram
+
+# Local database files
+*.mdf
+*.ldf
+
+# SQL Server files
+*.mdf
+*.ldf
+*.ndf
+
+# Rider directories
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+appsettings.Development.json
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Blazor WebAssembly
+Client/bin/
+Client/obj/
+Server/bin/
+Server/obj/
+Shared/bin/
+Shared/obj/
+
+# Build artifacts
+dist/
+
+# Package files
+*.lock.json
+package-lock.json
+yarn.lock
+
+# IDE settings
+.editorconfig
+
+# Certificates
+*.pem
+*.cert
+*.key
+
+# SSL certificates
+*.pfx
+*.cer
+
+# Visual Studio User-specific files
+.vscode/settings.json
+.vscode/launch.json
+.vscode/extensions.json
+
+# Misc
+*.bak
+*.backup
+*.cache
+*.swp
+*.swo
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Node modules (if applicable)
+node_modules/
+
+# Coverage reports
+coverage/
+*.coverage
+opencover/
+
+# Build folders
+PublishProfiles/
+
+# Azure DevOps
+.azure-devops/
+
+# GitHub Actions
+.github/workflows/
+
+# Compiled class files
+*.class
+
+# Compression
+*.gz
+*.zip
+*.rar
+*.7z
+
+# Specific to this project
+Client/wwwroot/lib/
+Server/Migrations/
