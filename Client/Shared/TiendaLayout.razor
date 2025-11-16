@@ -1,12 +1,11 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
 
 <BlazoredToasts />
 <NavMenu></NavMenu>
-<div class="container body-content">
-    @Body
-</div>
-@code{
+@Body
+<Footer />
 
+@code{
     private bool collapseNavMenu = true;
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 

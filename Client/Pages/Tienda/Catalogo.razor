@@ -1,64 +1,27 @@
 ﻿@page "/"
 @page "/catalogo"
+@layout TiendaLayout
 @inject IProductoServicio productoServicio;
 @inject ICategoriaServicio categoriaServicio;
 @inject NavigationManager navManager
 @inject IJSRuntime JSRuntime
 
 
-<div id="carouselExampleIndicators" class="carousel slide mb-4" data-bs-ride="carousel">
-    <div class="carousel-indicators">
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-    </div>
-    <div class="carousel-inner">
-        <div class="carousel-item active">
-            <img src="images/imagen1.jpg" class="d-block w-100" alt="Oferta especial" style="height: 400px; object-fit: cover;">
-            <div class="carousel-caption d-none d-md-block">
-                <h5>Ofertas Especiales</h5>
-                <p>Descubre nuestras mejores ofertas del mes.</p>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <img src="images/slide2.jpg" class="d-block w-100" alt="Nuevos productos" style="height: 400px; object-fit: cover;">
-            <div class="carousel-caption d-none d-md-block">
-                <h5>Nuevos Productos</h5>
-                <p>Explora nuestra última colección.</p>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <img src="images/slide3.jpg" class="d-block w-100" alt="Categorías destacadas" style="height: 400px; object-fit: cover;">
-            <div class="carousel-caption d-none d-md-block">
-                <h5>Categorías Destacadas</h5>
-                <p>Encuentra los mejores productos por categoría.</p>
+<Carousel />
+
+<div class="container">
+    <div class="row justify-content-center mt-3 mb-4">
+        <div class="col-sm-6 col-md-8 col-xl-9">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Buscar producto..." @bind-value="buscar">
+                <button class="btn btn-outline-secondary" type="button" @onclick="(async () => await  ObtenerCatalogo())">
+                    <i class="oi oi-magnifying-glass"></i></button>
             </div>
         </div>
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Anterior</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Siguiente</span>
-    </button>
-</div>
 
-
-<div class="row justify-content-center mt-3 mb-4">
-   
-    <div class="col-sm-6 col-md-8 col-xl-9">
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Buscar producto..." @bind-value="buscar">
-            <button class="btn btn-outline-secondary" type="button" @onclick="(async () => await  ObtenerCatalogo())">
-                <i class="oi oi-magnifying-glass"></i></button>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-sm-3">
+    <div class="row">
+        <div class="col-sm-3">
 
 
         <div class="card">
@@ -150,7 +113,7 @@
         </div>
     </div>
 </div>
-
+</div>
 
 @code {
 
@@ -199,13 +162,5 @@
     {
         await ObtenerCategorias();
         await ObtenerCatalogo();
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await JSRuntime.InvokeVoidAsync("initCarousel");
-        }
     }
 }

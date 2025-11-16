@@ -1,0 +1,247 @@
+/* NavBar Moderno - UrbanDemons */
+
+.navbar {
+    border-bottom: 3px solid #fe0c0c;
+    transition: all 0.3s ease;
+}
+
+.navbar-brand {
+    font-size: 1.8rem !important;
+    font-weight: 700;
+    color: #fff !important;
+    letter-spacing: 0.5px;
+    transition: transform 0.3s ease;
+}
+
+.navbar-brand:hover {
+    transform: scale(1.05);
+    color: #fe0c0c !important;
+}
+
+.navbar-brand i {
+    color: #dc143c;
+    margin-right: 8px;
+    font-size: 1.5rem;
+}
+
+/* Nav Links */
+.navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-weight: 500;
+    margin: 0 8px;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+    padding: 6px 12px !important;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #dc143c !important;
+    background-color: rgba(220, 20, 60, 0.1);
+    transform: translateY(-2px);
+}
+
+.navbar-nav .nav-link.active {
+    color: #dc143c !important;
+    font-weight: 600;
+    border-bottom: 2px solid #dc143c;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+    background-color: #2a2a2a;
+    border: 3px solid #dc143c;
+    border-radius: 6px;
+    box-shadow: 0 8px 16px rgba(220, 20, 60, 0.6);
+    min-width: 200px;
+}
+
+.dropdown-item {
+    color: #ffffff !important;
+    transition: all 0.3s ease;
+    padding: 12px 16px;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.dropdown-item:hover {
+    background-color: #dc143c;
+    color: #fff;
+    border-radius: 4px;
+    transform: translateX(4px);
+}
+
+.dropdown-item i {
+    color: #dc143c;
+    margin-right: 8px;
+    transition: all 0.3s ease;
+}
+
+.dropdown-item:hover i {
+    color: #fff;
+}
+
+.dropdown-divider {
+    border-color: rgba(220, 20, 60, 0.3);
+}
+
+/* Estilos para NavLink dentro del dropdown */
+.dropdown-menu .dropdown-item {
+    color: #ffffff !important;
+}
+
+.dropdown-menu a {
+    color: #ffffff !important;
+    text-decoration: none;
+}
+
+.white-text {
+    color: #ffffff !important;
+}
+
+.white-text:active,
+.white-text:focus,
+.white-text:visited {
+    color: #ffffff !important;
+}
+
+.dropdown-menu .dropdown-item:active {
+    background-color: #dc143c;
+    color: #ffffff !important;
+}
+
+.dropdown-menu .dropdown-item:focus {
+    background-color: #dc143c;
+    color: #ffffff !important;
+}
+
+/* Buttons */
+.btn-outline-light {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.5);
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+}
+
+.btn-outline-light:hover {
+    background-color: #dc143c;
+    border-color: #dc143c;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
+}
+
+.btn-light {
+    background-color: #dc143c;
+    border-color: #dc143c;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.btn-light:hover {
+    background-color: #b30a2d;
+    border-color: #b30a2d;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 20, 60, 0.4);
+}
+
+/* Carrito Badge */
+.badge {
+    font-size: 0.75rem;
+    padding: 4px 6px;
+    animation: pulse 2s infinite;
+}
+
+/* Carrito Link */
+.cart-link {
+    color: #fff !important;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    position: relative;
+}
+
+.cart-link:hover {
+    background-color: rgba(220, 20, 60, 0.15);
+    color: #dc143c !important;
+    transform: translateY(-2px);
+}
+
+.cart-link i {
+    font-size: 1.8rem;
+    color: #dc143c;
+    transition: all 0.3s ease;
+}
+
+.cart-link:hover i {
+    color: #ff6b9d;
+    transform: scale(1.15);
+}
+
+.cart-text {
+    display: inline;
+}
+
+.cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    font-weight: 700;
+    animation: bounce 0.6s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-4px);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+    .navbar-collapse {
+        margin-top: 15px;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        padding-top: 15px;
+    }
+
+    .navbar-nav .nav-link {
+        margin: 5px 0;
+    }
+
+    .d-flex {
+        flex-direction: column;
+        gap: 10px !important;
+    }
+
+    .btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Efecto sombra al scroll */
+.navbar.scrolled {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
