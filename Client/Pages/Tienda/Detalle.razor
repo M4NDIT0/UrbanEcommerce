@@ -1,55 +1,85 @@
 ﻿@page "/detalle/{Id:int}"
-
+@layout TiendaLayout
 
 @inject IProductoServicio productoServicio;
 @inject ICarritoServicio carritoServicio
 
-<div class="container px-4 px-lg-5 my-5">
-
-
+<div class="container py-5">
     @if (modelo != null)
     {
-        <div class="row gx-4 gx-lg-5 align-items-center">
-            <div class="col-md-6">
-                <img class="card-img-top border-dark border-1" src="@modelo.Imagen" style="width:100%;">
+        <div class="row g-4">
+            <!-- Imagen del Producto (Izquierda) -->
+            <div class="col-lg-6 d-flex align-items-center">
+                <div class="product-image-container w-100">
+                    <img class="img-fluid rounded shadow-lg" src="@modelo.Imagen" alt="@modelo.Nombre" style="max-height: 600px; object-fit: cover; width: 100%;">
+                </div>
             </div>
-            <div class="col-md-6">
-                <h1 class="display-5 fw-bolder">@modelo.Nombre</h1>
-                <div class="fs-5 mb-5">
+
+            <!-- Detalles del Producto (Derecha) -->
+            <div class="col-lg-6">
+                <!-- Nombre -->
+                <h1 class="display-4 fw-bold text-dark mb-3">@modelo.Nombre</h1>
+
+                <!-- Precios -->
+                <div class="pricing-section mb-4 p-4 bg-light rounded-3">
                     @if (modelo.PrecioOferta != 0 && modelo.PrecioOferta < modelo.Precio)
                     {
-                        <span class="text-danger text-decoration-line-through">S/. @modelo.Precio</span>
-                        <span>S /.@modelo.PrecioOferta</span>
+                        <div class="d-flex align-items-baseline gap-3 mb-2">
+                            <span class="text-muted text-decoration-line-through fs-5">S/. @modelo.Precio</span>
+                            <span class="badge bg-danger fs-6">En Oferta</span>
+                        </div>
+                        <h2 class="text-danger fw-bold">S/. @modelo.PrecioOferta</h2>
                     }
                     else
                     {
-                        <span>S /.@modelo.Precio</span>
+                        <h2 class="text-danger fw-bold">S/. @modelo.Precio</h2>
                     }
                 </div>
-                <p class="lead">@modelo.Descripcion</p>
-                <div class="d-flex">
-                    <input class="form-control text-center me-3" type="number" min="1" style="width:60px" @bind-value="cantidad">
-                    <button class="btn btn-outline-dark flex-shrink-0 me-3" type="button" @onclick="(async() => await AgregarCarrito(modelo))">
-                        <i class="bi-cart-fill me-1"></i>
-                        Agregar al carrito
-                    </button>
-                    <a class="btn btn-outline-dark flex-shrink-0" href="/catalogo">
-                        <i class="bi-cart-fill me-1"></i>
-                        Volver
-                    </a>
+
+                <!-- Descripción -->
+                <p class="fs-5 text-muted mb-4 lh-lg">@modelo.Descripcion</p>
+
+                <!-- Cantidad y Botones -->
+                <div class="action-section mb-4">
+                    <div class="input-group mb-3" style="max-width: 150px;">
+                        <button class="btn btn-outline-danger" type="button" @onclick="() => DecantidadClick()">
+                            <i class="bi bi-dash-lg"></i>
+                        </button>
+                        <input type="number" class="form-control text-center fw-bold" @bind-value="cantidad" min="1">
+                        <button class="btn btn-outline-danger" type="button" @onclick="() => IncrementarClick()">
+                            <i class="bi bi-plus-lg"></i>
+                        </button>
+                    </div>
+
+                    <!-- Botones de Acción -->
+                    <div class="d-grid gap-3 d-md-flex">
+                        <button class="btn btn-danger btn-lg px-5 fw-bold flex-md-grow-1" type="button" @onclick="(async() => await AgregarCarrito(modelo))">
+                            <i class="fa-solid fa-shopping-cart me-2"></i>
+                            Agregar al Carrito
+                        </button>
+                        <a class="btn btn-outline-danger btn-lg px-5 fw-bold" href="/catalogo">
+                            <i class="bi bi-arrow-left me-2"></i>
+                            Volver
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Stock Info -->
+                <div class="alert alert-info rounded-3 p-3">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <strong>Stock Disponible:</strong> @modelo.Cantidad unidades
                 </div>
             </div>
         </div>
     }
     else
     {
-        <div class="spinner-border" role="status">
-            <span class="visually-hidden">Loading...</span>
+        <div class="d-flex justify-content-center py-5">
+            <div class="spinner-border text-danger" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
         </div>
     }
-
-
-
 </div>
 
 @code {
@@ -64,6 +94,18 @@
             modelo = (ProductoDTO)response.Resultado!;
     }
 
+    private void IncrementarClick()
+    {
+        if (modelo != null && cantidad < modelo.Cantidad)
+            cantidad++;
+    }
+
+    private void DecantidadClick()
+    {
+        if (cantidad > 1)
+            cantidad--;
+    }
+
     private async Task AgregarCarrito(ProductoDTO modelo)
     {
         decimal? precioFinal = (modelo.PrecioOferta != 0 && modelo.PrecioOferta < modelo.Precio) ? modelo.PrecioOferta : modelo.Precio;
@@ -76,5 +118,4 @@
             };
         await carritoServicio.AgregarCarrito(carrito);
     }
-
 }
