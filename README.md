@@ -1,6 +1,8 @@
 # Urban Ecommerce 🛍️
 
-Una plataforma de comercio electrónico moderna y escalable construida con **ASP.NET Core Blazor WebAssembly**, ofreciendo una experiencia de usuario fluida con procesamiento del lado del servidor y cliente.
+Una plataforma de comercio electrónico moderna y escalable construida con **ASP.NET Core 9.0 + Blazor WebAssembly**, ofreciendo una experiencia de usuario fluida con diseño responsive y componentes modernos. Interfaz premium con tema oscuro y branding rojo (#dc143c).
+
+**Versión Actual:** .NET 9.0.0 | **Estado:** ✅ En desarrollo activo
 
 ---
 
@@ -108,7 +110,7 @@ Urban Ecommerce implementa una **arquitectura de tres capas** con separación cl
 
 ## 📋 Requisitos Previos
 
-- **.NET 7.0 o superior** (se recomienda .NET 9.0)
+- **.NET 9.0** ✅ (Migrado de .NET 7.0)
 - **SQL Server** (Express o Superior)
 - **Visual Studio 2022** o **VS Code** con extensiones C#
 - **Node.js** (opcional, para herramientas frontend adicionales)
@@ -279,22 +281,29 @@ UrbanEcommerce/
 ### Backend
 | Tecnología | Versión | Propósito |
 |-----------|---------|----------|
-| ASP.NET Core | 7.0 | Framework web server-side |
-| Entity Framework Core | 7.0.5 | ORM para acceso a datos |
+| ASP.NET Core | 9.0.0 | Framework web server-side |
+| Entity Framework Core | 9.0.0 | ORM para acceso a datos |
 | SQL Server | Latest | Base de datos relacional |
 | AutoMapper | 12.0.1 | Mapeo de objetos |
-| C# | 11 | Lenguaje de programación |
+| C# | 13 | Lenguaje de programación |
 
 ### Frontend
 | Tecnología | Versión | Propósito |
 |-----------|---------|----------|
-| Blazor WebAssembly | 7.0.5 | Framework SPA interactivo |
-| Bootstrap | Latest | Framework CSS responsive |
-| MudBlazor | 6.11.2 | Componentes Material Design |
-| Blazored.LocalStorage | 4.3.0 | Almacenamiento local |
-| Blazored.SessionStorage | 2.3.0 | Almacenamiento de sesión |
+| Blazor WebAssembly | 9.0.0 | Framework SPA interactivo |
+| Bootstrap | 5 | Framework CSS responsive |
+| Bootstrap Icons | Latest | Iconos vectoriales |
+| MudBlazor | 7.3.0 | Componentes Material Design |
+| Blazored.LocalStorage | 4.4.0 | Almacenamiento local |
+| Blazored.SessionStorage | 2.4.0 | Almacenamiento de sesión |
 | Blazored.Toast | 4.1.0 | Notificaciones Toast |
 | SweetAlert2 | 5.5.0 | Diálogos personalizados |
+
+### Diseño & Branding
+- **Tema:** Oscuro (Dark Mode)
+- **Color Principal:** Crimson Red (#dc143c)
+- **Color Secundario:** Dark Gray (#1a1a1a, #2a2a2a)
+- **Estilo:** Modern & Professional
 
 ### Patrones de Desarrollo
 - Clean Architecture
@@ -302,6 +311,7 @@ UrbanEcommerce/
 - Dependency Injection
 - SOLID Principles
 - Async/Await Pattern
+- Scoped CSS (Componentes aislados)
 
 ---
 
@@ -463,6 +473,43 @@ GET     /api/dashboard/topproductos     - Productos más vendidos
 │ FechaRegistro              │
 └────────────────────────────┘
 ```
+
+---
+
+## ✨ Mejoras Recientes (v2.0)
+
+### Actualización de Framework
+- ✅ Migración completa de .NET 7.0 → .NET 9.0
+- ✅ Actualización de todas las dependencias NuGet
+- ✅ Compatibilidad con C# 13
+
+### Rediseño de UI Moderno
+- 🎨 **Tema Oscuro Premium** con paleta de colores rojo (#dc143c) y gris oscuro
+- 🔴 **Branding Rojo Consistente** en toda la aplicación
+- 🎭 **NavBar Modernizada** con dropdown menus mejorados
+- 📱 **Diseño Responsive Completo** (Mobile-first)
+- ✨ **Efectos Hover** y transiciones suaves en componentes
+
+### Componentes Rediseñados
+- ✅ **Carousel Hero** - Altura aumentada (600px), botones CTA, scroll navigation
+- ✅ **Tarjetas de Productos** - Hover effects, shadow elevation, modern styling
+- ✅ **Página de Detalle** - Layout 2-column, quantity controls mejorados
+- ✅ **Barra Lateral de Categorías** - List-group styling, hover effects
+- ✅ **About Us Section** - Componente con grid de features (3 columnas)
+- ✅ **Carrito de Compras** - Diseño moderno con card layout, payment summary sticky
+
+### Estilos & CSS
+- 🎯 **Scoped CSS** en componentes (`.razor.css` files)
+- 📐 **Bootstrap 5** Grid system optimizado
+- 🎨 **Inline Styles Reemplazados** por clases CSS reutilizables
+- 🌐 **Bootstrap Icons** integrados (bi-* prefix)
+- 📱 **Breakpoints Responsive** (XL, LG, MD, SM, XS)
+
+### Homepage Flow Mejorado
+1. **Carousel Hero** con CTA buttons
+2. **About Us Section** con información y features
+3. **Catálogo de Productos** con búsqueda y filtros
+4. **Scroll Navigation** fluida entre secciones
 
 ---
 
