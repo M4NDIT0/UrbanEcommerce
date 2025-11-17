@@ -1,35 +1,66 @@
-.carousel-fullwidth {
-    width: 100vw;
-    position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
-    margin-bottom: 1.5rem;
+/* Carousel styling con propiedades críticas */
+
+/* Imágenes del carousel - ASEGURAR QUE SE VEA BIEN */
+.carousel-item img {
+    height: 600px !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    width: 100% !important;
+    display: block !important;
 }
 
-.carousel-fullwidth img {
-    height: 400px;
-    object-fit: cover;
-    width: 100%;
+/* Indicadores mejorados */
+.carousel-indicators button {
+    width: 12px !important;
+    height: 12px !important;
+    border-radius: 50% !important;
+    background-color: rgba(220, 20, 60, 0.5) !important;
+    border: 2px solid #dc143c !important;
+    margin: 0 8px !important;
+    transition: all 0.3s ease !important;
 }
 
-.carousel-fullwidth .carousel-caption {
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.7) 100%);
-    bottom: 0;
-    padding-bottom: 2rem;
+.carousel-indicators button.active {
+    background-color: #dc143c !important;
+    width: 30px !important;
+    height: 12px !important;
+    border-radius: 6px !important;
+    border-color: #dc143c !important;
 }
 
+/* Controles - Sin background rojo */
+.carousel-control-prev,
+.carousel-control-next {
+    background-color: transparent !important;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    background-color: transparent !important;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    filter: invert(1) !important;
+}
+
+/* Responsive - Desktop */
+@media (max-width: 1200px) {
+    .carousel-item img {
+        height: 500px !important;
+    }
+}
+
+/* Responsive - Tablet */
 @media (max-width: 768px) {
-    .carousel-fullwidth img {
-        height: 250px;
+    .carousel-item img {
+        height: 350px !important;
     }
-    
-    .carousel-fullwidth .carousel-caption h5 {
-        font-size: 1.2rem;
-    }
-    
-    .carousel-fullwidth .carousel-caption p {
-        font-size: 0.9rem;
+}
+
+/* Responsive - Mobile */
+@media (max-width: 480px) {
+    .carousel-item img {
+        height: 250px !important;
     }
 }
