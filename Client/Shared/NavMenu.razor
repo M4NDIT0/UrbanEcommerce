@@ -119,11 +119,35 @@
                 <!-- Botones Autenticación -->
                 <AuthorizeView>
                     <Authorized>
-                        <button class="btn btn-sm btn-outline-light logout-btn" type="button" 
-                                @onclick="CerrarSesion" title="Cerrar sesión">
-                            <i class="bi bi-box-arrow-right"></i>
-                            <span>Salir</span>
-                        </button>
+                        <!-- Dropdown Perfil y Configuración -->
+                        <div class="nav-item dropdown">
+                            <button class="btn btn-sm btn-outline-light dropdown-toggle user-menu-btn" 
+                                    type="button" id="userMenuDropdown" data-bs-toggle="dropdown" 
+                                    aria-expanded="false" title="Menú de usuario">
+                                <i class="bi bi-person-gear"></i>
+                                <span class="d-none d-lg-inline">Mi Cuenta</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenuDropdown">
+                                <li><NavLink class="dropdown-item" href="/perfil" title="Ir a mi perfil">
+                                    <i class="bi bi-person"></i>
+                                    Mi Perfil
+                                </NavLink></li>
+                                <li><NavLink class="dropdown-item" href="/mis-pedidos" title="Ver mis pedidos">
+                                    <i class="bi bi-box-seam"></i>
+                                    Mis Pedidos
+                                </NavLink></li>
+                                <li><NavLink class="dropdown-item" href="/configuracion" title="Configuración">
+                                    <i class="bi bi-gear"></i>
+                                    Configuración
+                                </NavLink></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><button class="dropdown-item logout-item" type="button" 
+                                            @onclick="CerrarSesion" title="Cerrar sesión">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                    Salir
+                                </button></li>
+                            </ul>
+                        </div>
                     </Authorized>
                     <NotAuthorized>
                         <a class="btn btn-sm btn-light fw-semibold login-btn" href="/login" title="Ir a login">

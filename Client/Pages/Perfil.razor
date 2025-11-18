@@ -1,0 +1,382 @@
+@page "/perfil"
+@using BlazorEcommerce.Shared
+
+@inject IPerfilServicio perfilServicio
+@inject NavigationManager navigationManager
+@inject SweetAlertService Swal
+
+<AuthorizeView>
+    <Authorized>
+        <div class="perfil-container">
+            <div class="perfil-header">
+                <h1 class="perfil-title">
+                    <i class="bi bi-person-circle"></i>
+                    Mi Perfil
+                </h1>
+                <p class="perfil-subtitle">Gestiona tu información personal y configuración</p>
+            </div>
+
+            @if (cargando)
+            {
+                <div class="spinner-container">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <p>Cargando tu perfil...</p>
+                </div>
+            }
+            else if (perfil != null)
+            {
+                <div class="perfil-content">
+                    <!-- Tabs de navegación -->
+                    <ul class="nav nav-tabs perfil-tabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="datos-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#datos-content" type="button" role="tab">
+                                <i class="bi bi-person"></i>
+                                Datos Personales
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="seguridad-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#seguridad-content" type="button" role="tab">
+                                <i class="bi bi-shield-lock"></i>
+                                Seguridad
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pedidos-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#pedidos-content" type="button" role="tab">
+                                <i class="bi bi-box-seam"></i>
+                                Mis Pedidos
+                            </button>
+                        </li>
+                    </ul>
+
+                    <!-- Contenido de Tabs -->
+                    <div class="tab-content perfil-tab-content">
+                        <!-- Tab 1: Datos Personales -->
+                        <div class="tab-pane fade show active" id="datos-content" role="tabpanel">
+                            <div class="perfil-form">
+                                <h5 class="form-section-title">
+                                    <i class="bi bi-pencil-square"></i>
+                                    Información Personal
+                                </h5>
+
+                                <EditForm Model="perfil" OnValidSubmit="ActualizarPerfil" Context="formContext">
+                                    <DataAnnotationsValidator />
+
+                                    <div class="row mb-4">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="nombreCompleto" class="form-label">
+                                                    <i class="bi bi-person-fill"></i>
+                                                    Nombre Completo
+                                                </label>
+                                                <InputText id="nombreCompleto" class="form-control form-control-lg" 
+                                                          placeholder="Ingrese su nombre completo"
+                                                          @bind-Value="perfil.NombreCompleto" />
+                                                <ValidationMessage For="@(() => perfil.NombreCompleto)" class="text-danger" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="correo" class="form-label">
+                                                    <i class="bi bi-envelope-fill"></i>
+                                                    Correo Electrónico
+                                                </label>
+                                                <InputText id="correo" type="email" class="form-control form-control-lg" 
+                                                          placeholder="correo@ejemplo.com"
+                                                          disabled
+                                                          @bind-Value="perfil.Correo" />
+                                                <small class="form-text text-muted">El correo no puede ser modificado</small>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-actions">
+                                        <button type="submit" class="btn btn-primary btn-lg" disabled="@enviandoActualizacion">
+                                            @if (enviandoActualizacion)
+                                            {
+                                                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                                <span>Guardando...</span>
+                                            }
+                                            else
+                                            {
+                                                <i class="bi bi-check-circle"></i>
+                                                <span>Guardar Cambios</span>
+                                            }
+                                        </button>
+                                        <button type="button" class="btn btn-secondary btn-lg" @onclick="CancelarEdicion">
+                                            <i class="bi bi-x-circle"></i>
+                                            <span>Cancelar</span>
+                                        </button>
+                                    </div>
+                                </EditForm>
+                            </div>
+                        </div>
+
+                        <!-- Tab 2: Seguridad -->
+                        <div class="tab-pane fade" id="seguridad-content" role="tabpanel">
+                            <div class="perfil-form">
+                                <h5 class="form-section-title">
+                                    <i class="bi bi-lock-fill"></i>
+                                    Cambiar Contraseña
+                                </h5>
+
+                                <EditForm Model="cambioContraseña" OnValidSubmit="CambiarContraseña" Context="passContext">
+                                    <DataAnnotationsValidator />
+
+                                    <div class="mb-4">
+                                        <div class="form-group">
+                                            <label for="contraseñaActual" class="form-label">
+                                                <i class="bi bi-key-fill"></i>
+                                                Contraseña Actual
+                                            </label>
+                                            <InputText id="contraseñaActual" type="password" class="form-control form-control-lg" 
+                                                      placeholder="Ingrese su contraseña actual"
+                                                      @bind-Value="cambioContraseña.ContraseñaActual" />
+                                            <ValidationMessage For="@(() => cambioContraseña.ContraseñaActual)" class="text-danger" />
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-4">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="contraseñaNueva" class="form-label">
+                                                    <i class="bi bi-key-fill"></i>
+                                                    Nueva Contraseña
+                                                </label>
+                                                <InputText id="contraseñaNueva" type="password" class="form-control form-control-lg" 
+                                                          placeholder="Ingrese la nueva contraseña"
+                                                          @bind-Value="cambioContraseña.ContraseñaNueva" />
+                                                <ValidationMessage For="@(() => cambioContraseña.ContraseñaNueva)" class="text-danger" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="confirmarContraseña" class="form-label">
+                                                    <i class="bi bi-key-fill"></i>
+                                                    Confirmar Contraseña
+                                                </label>
+                                                <InputText id="confirmarContraseña" type="password" class="form-control form-control-lg" 
+                                                          placeholder="Confirme la nueva contraseña"
+                                                          @bind-Value="cambioContraseña.ConfirmarContraseña" />
+                                                <ValidationMessage For="@(() => cambioContraseña.ConfirmarContraseña)" class="text-danger" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="alert alert-info" role="alert">
+                                        <i class="bi bi-info-circle"></i>
+                                        <strong>Consejo de seguridad:</strong> Usa una contraseña fuerte con mayúsculas, minúsculas, números y símbolos
+                                    </div>
+
+                                    <div class="form-actions">
+                                        <button type="submit" class="btn btn-danger btn-lg" disabled="@enviandoCambio">
+                                            @if (enviandoCambio)
+                                            {
+                                                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                                <span>Actualizando...</span>
+                                            }
+                                            else
+                                            {
+                                                <i class="bi bi-check-circle"></i>
+                                                <span>Cambiar Contraseña</span>
+                                            }
+                                        </button>
+                                    </div>
+                                </EditForm>
+                            </div>
+                        </div>
+
+                        <!-- Tab 3: Mis Pedidos -->
+                        <div class="tab-pane fade" id="pedidos-content" role="tabpanel">
+                            <div class="perfil-pedidos">
+                                <h5 class="form-section-title">
+                                    <i class="bi bi-box-seam"></i>
+                                    Historial de Pedidos
+                                </h5>
+
+                                @if (cargandoPedidos)
+                                {
+                                    <div class="spinner-container">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Cargando...</span>
+                                        </div>
+                                        <p>Cargando tu historial de pedidos...</p>
+                                    </div>
+                                }
+                                else if (pedidos != null && pedidos.Count > 0)
+                                {
+                                    <div class="table-responsive">
+                                        <table class="table table-hover perfil-tabla-pedidos">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID Pedido</th>
+                                                    <th>Total</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var pedido in pedidos)
+                                                {
+                                                    <tr>
+                                                        <td><strong>#@pedido.IdVenta</strong></td>
+                                                        <td><strong>@string.Format("{0:C}", pedido.Total)</strong></td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-sm btn-outline-primary" 
+                                                                   title="Ver detalles del pedido">
+                                                                <i class="bi bi-eye"></i>
+                                                                Ver
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="alert alert-warning" role="alert">
+                                        <i class="bi bi-exclamation-triangle"></i>
+                                        <strong>Sin pedidos</strong> - Aún no has realizado ningún pedido. ¡Visita nuestra tienda!
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-danger" role="alert">
+                    <i class="bi bi-exclamation-circle"></i>
+                    <strong>Error</strong> - No se pudo cargar tu perfil. Por favor, intenta más tarde.
+                </div>
+            }
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <div class="alert alert-warning" role="alert">
+            <i class="bi bi-exclamation-triangle"></i>
+            <strong>Acceso denegado</strong> - Debes iniciar sesión para ver tu perfil.
+        </div>
+        <a href="/login" class="btn btn-primary">Ir a Login</a>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private PersonaDTO perfil = new();
+    private ChangePasswordDTO cambioContraseña = new();
+    private List<VentaDTO> pedidos = new();
+    
+    private bool cargando = true;
+    private bool cargandoPedidos = false;
+    private bool enviandoActualizacion = false;
+    private bool enviandoCambio = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarPerfil();
+    }
+
+    private async Task CargarPerfil()
+    {
+        cargando = true;
+        var resultado = await perfilServicio.ObtenerPerfil();
+        
+        if (resultado.EsCorrecto && resultado.Resultado != null)
+        {
+            perfil = resultado.Resultado;
+            await CargarPedidos();
+        }
+        else
+        {
+            await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Error",
+                Html = resultado.Mensaje,
+                Icon = SweetAlertIcon.Error
+            });
+        }
+        
+        cargando = false;
+    }
+
+    private async Task CargarPedidos()
+    {
+        cargandoPedidos = true;
+        var resultado = await perfilServicio.ObtenerHistorialPedidos();
+        
+        if (resultado.EsCorrecto && resultado.Resultado != null)
+        {
+            pedidos = resultado.Resultado;
+        }
+        
+        cargandoPedidos = false;
+    }
+
+    private async Task ActualizarPerfil()
+    {
+        enviandoActualizacion = true;
+        
+        var resultado = await perfilServicio.ActualizarPerfil(perfil);
+        
+        if (resultado.EsCorrecto)
+        {
+            await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Éxito",
+                Html = "Tu perfil ha sido actualizado correctamente",
+                Icon = SweetAlertIcon.Success
+            });
+        }
+        else
+        {
+            await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Error",
+                Html = resultado.Mensaje,
+                Icon = SweetAlertIcon.Error
+            });
+        }
+        
+        enviandoActualizacion = false;
+    }
+
+    private async Task CambiarContraseña()
+    {
+        enviandoCambio = true;
+        
+        var resultado = await perfilServicio.CambiarContraseña(cambioContraseña);
+        
+        if (resultado.EsCorrecto)
+        {
+            cambioContraseña = new();
+            await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Éxito",
+                Html = "Tu contraseña ha sido cambiada correctamente",
+                Icon = SweetAlertIcon.Success
+            });
+        }
+        else
+        {
+            await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Error",
+                Html = resultado.Mensaje,
+                Icon = SweetAlertIcon.Error
+            });
+        }
+        
+        enviandoCambio = false;
+    }
+
+    private void CancelarEdicion()
+    {
+        navigationManager.NavigateTo("/perfil", true);
+    }
+}

@@ -2,6 +2,8 @@
 using BlazorEcommerce.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace BlazorEcommerce.Server.Controllers
 {
@@ -52,7 +54,66 @@ namespace BlazorEcommerce.Server.Controllers
             return Ok(await _personaServicio.Eliminar(Id));
         }
 
+        /// <summary>
+        /// Obtiene el perfil del usuario autenticado
+        /// </summary>
+        [HttpGet("Perfil/{id:int}")]
+        public async Task<IActionResult> ObtenerPerfil(int id)
+        {
+            try
+            {
+                return Ok(await _personaServicio.Obtener(id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ResponseDTO<PersonaDTO> 
+                { 
+                    EsCorrecto = false, 
+                    Mensaje = $"Error: {ex.Message}" 
+                });
+            }
+        }
 
+        /// <summary>
+        /// Actualiza el perfil del usuario autenticado
+        /// </summary>
+        [HttpPut("Perfil")]
+        public async Task<IActionResult> ActualizarPerfil([FromBody] PersonaDTO modelo)
+        {
+            try
+            {
+                return Ok(await _personaServicio.Editar(modelo));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ResponseDTO<PersonaDTO> 
+                { 
+                    EsCorrecto = false, 
+                    Mensaje = $"Error: {ex.Message}" 
+                });
+            }
+        }
+
+        /// <summary>
+        /// Cambia la contraseña del usuario autenticado
+        /// </summary>
+        [HttpPost("cambiar-contraseña/{idPersona:int}")]
+        public async Task<IActionResult> CambiarContraseña(int idPersona, [FromBody] ChangePasswordDTO modelo)
+        {
+            try
+            {
+                var resultado = await _personaServicio.CambiarContraseña(idPersona, modelo);
+                return Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ResponseDTO<bool> 
+                { 
+                    EsCorrecto = false, 
+                    Mensaje = $"Error: {ex.Message}" 
+                });
+            }
+        }
 
     }
 }

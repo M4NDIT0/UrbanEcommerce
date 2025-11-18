@@ -4,52 +4,77 @@
 @inject NavigationManager _navServicio
 @inject IToastService toastService
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-lg-7">
-            <div class="card rounded-lg mt-5">
-                <div class="card-header"><h3 class="text-center font-weight-light my-4">Crear Cuenta</h3></div>
-                <div class="card-body">
+<div class="registro-container">
+    <div class="registro-card">
+        
+        <div class="registro-header">
+            <h2 class="registro-title">Crear Cuenta</h2>
+            <p class="registro-subtitle">Únete a Urban Ecommerce</p>
+        </div>
 
-                    <EditForm Model="modelo" OnValidSubmit="GuardarCambios">
-                        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <EditForm Model="modelo" OnValidSubmit="GuardarCambios" class="registro-form">
+            <DataAnnotationsValidator></DataAnnotationsValidator>
 
-                        <div class="form-floating mb-3">
-                            <input class="form-control" id="inputEmail" type="text" placeholder="name@example.com" @bind-value="modelo.NombreCompleto" autocomplete="off" />
-                            <label for="inputEmail">Nombre Completo</label>
-                            <ValidationMessage For="@(()=>modelo.NombreCompleto)" />
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input class="form-control" id="inputEmail" type="email" placeholder="name@example.com" @bind-value="modelo.Correo" autocomplete="off" />
-                            <label for="inputEmail">Correo</label>
-                            <ValidationMessage For="@(()=>modelo.Correo)" />
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <div class="form-floating mb-3 mb-md-0">
-                                    <input class="form-control" id="inputPassword" type="password" placeholder="Create a password" @bind-value="modelo.Clave" autocomplete="off" />
-                                    <label for="inputPassword">Contraseña</label>
-                                    <ValidationMessage For="@(()=>modelo.Clave)" />
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating mb-3 mb-md-0">
-                                    <input class="form-control" id="inputPasswordConfirm" type="password" placeholder="Confirm password" @bind-value="modelo.ConfirmarClave" autocomplete="off" />
-                                    <label for="inputPasswordConfirm">Confirmar Contraseña</label>
-                                    <ValidationMessage For="@(()=>modelo.ConfirmarClave)" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-4 mb-0">
-                            <div class="d-grid"><button class="btn btn-primary btn-block" type="submit">Registrarse</button></div>
-                        </div>
-                    </EditForm>
+            <!-- Nombre Completo -->
+            <div class="form-group">
+                <label for="inputNombre" class="form-label">
+                    <i class="bi bi-person"></i> Nombre Completo
+                </label>
+                <input id="inputNombre" class="form-control registro-input" type="text" placeholder="Juan García" @bind-value="modelo.NombreCompleto" autocomplete="off" />
+                <ValidationMessage For="@(()=>modelo.NombreCompleto)" class="text-danger small" />
+            </div>
 
+            <!-- Email -->
+            <div class="form-group">
+                <label for="inputEmail" class="form-label">
+                    <i class="bi bi-envelope"></i> Correo
+                </label>
+                <input id="inputEmail" class="form-control registro-input" type="email" placeholder="tu@email.com" @bind-value="modelo.Correo" autocomplete="off" />
+                <ValidationMessage For="@(()=>modelo.Correo)" class="text-danger small" />
+            </div>
+
+            <!-- Contraseña y Confirmar -->
+            <div class="row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label for="inputPassword" class="form-label">
+                        <i class="bi bi-lock"></i> Contraseña
+                    </label>
+                    <input id="inputPassword" class="form-control registro-input" type="password" placeholder="••••••••" @bind-value="modelo.Clave" autocomplete="off" />
+                    <ValidationMessage For="@(()=>modelo.Clave)" class="text-danger small" />
                 </div>
-                <div class="card-footer text-center py-3">
-                    <div class="small"><a href="/login">Tienes una cuenta? ir a login</a></div>
+
+                <div class="form-group">
+                    <label for="inputPasswordConfirm" class="form-label">
+                        <i class="bi bi-lock-check"></i> Confirmar
+                    </label>
+                    <input id="inputPasswordConfirm" class="form-control registro-input" type="password" placeholder="••••••••" @bind-value="modelo.ConfirmarClave" autocomplete="off" />
+                    <ValidationMessage For="@(()=>modelo.ConfirmarClave)" class="text-danger small" />
                 </div>
             </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-registro" style="margin-top: 1rem;">
+                <i class="bi bi-person-plus"></i> Registrarse
+            </button>
+        </EditForm>
+
+        <!-- Divider -->
+        <div class="divider" style="margin: 1.5rem 0;">
+            <span>¿Ya tienes cuenta?</span>
+        </div>
+
+        <!-- Login Link -->
+        <a href="/login" class="btn btn-login-link">
+            <i class="bi bi-box-arrow-in-left"></i> Ir a Login
+        </a>
+
+        <!-- Footer Info -->
+        <div class="registro-footer">
+            <p class="footer-text">
+                Al registrarte, aceptas nuestros
+                <a href="#">Términos</a> y
+                <a href="#">Privacidad</a>
+            </p>
         </div>
     </div>
 </div>

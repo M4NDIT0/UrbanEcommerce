@@ -220,5 +220,66 @@ namespace BlazorEcommerce.Server.Servicios.PersonaSV
             }
             return response;
         }
+
+        public async Task<ResponseDTO<bool>> CambiarContraseña(int idPersona, ChangePasswordDTO modelo)
+        {
+            ResponseDTO<bool> response = new ResponseDTO<bool>()
+            {
+                Mensaje = "Ok",
+                EsCorrecto = true
+            };
+
+            try
+            {
+                var consulta = _personaRepositorio.Consultar(p => p.IdPersona == idPersona);
+                var fromDbModelo = await consulta.FirstOrDefaultAsync();
+
+                if (fromDbModelo == null)
+                {
+                    response.EsCorrecto = false;
+                    response.Mensaje = "Usuario no encontrado";
+                    return response;
+                }
+
+                // Verificar que la contraseña actual sea correcta
+                if (fromDbModelo.Clave != modelo.ContraseñaActual)
+                {
+                    response.EsCorrecto = false;
+                    response.Mensaje = "La contraseña actual es incorrecta";
+                    return response;
+                }
+
+                // Verificar que las contraseñas nuevas coincidan
+                if (modelo.ContraseñaNueva != modelo.ConfirmarContraseña)
+                {
+                    response.EsCorrecto = false;
+                    response.Mensaje = "Las contraseñas nuevas no coinciden";
+                    return response;
+                }
+
+                // Actualizar la contraseña
+                fromDbModelo.Clave = modelo.ContraseñaNueva;
+                var respuesta = await _personaRepositorio.Editar(fromDbModelo);
+
+                if (!respuesta)
+                {
+                    response.EsCorrecto = false;
+                    response.Mensaje = "No se pudo actualizar la contraseña";
+                }
+                else
+                {
+                    response.Resultado = true;
+                    response.Mensaje = "Contraseña cambiada exitosamente";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.EsCorrecto = false;
+                response.Mensaje = ex.Message;
+                response.Resultado = false;
+            }
+
+            return response;
+        }
     }
 }

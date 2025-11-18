@@ -10,6 +10,7 @@ namespace BlazorEcommerce.Server.Servicios.PersonaSV
         Task<ResponseDTO<PersonaDTO>> Crear(PersonaDTO modelo);
         Task<ResponseDTO<bool>> Editar(PersonaDTO modelo);
         Task<ResponseDTO<bool>> Eliminar(int id);
+        Task<ResponseDTO<bool>> CambiarContraseña(int idPersona, ChangePasswordDTO modelo);
 
     }
 }

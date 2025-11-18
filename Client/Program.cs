@@ -16,6 +16,7 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddMudServices();
 builder.Services.AddScoped<IPersonaServicio,PersonaServicio>();
+builder.Services.AddScoped<IPerfilServicio, PerfilServicio>();
 builder.Services.AddScoped<ICategoriaServicio,CategoriaServicio>();
 builder.Services.AddScoped<IProductoServicio,ProductoServicio>();
 builder.Services.AddScoped<ICarritoServicio,CarritoServicio>();

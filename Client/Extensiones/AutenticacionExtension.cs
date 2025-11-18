@@ -23,6 +23,7 @@ namespace BlazorEcommerce.Client.Extensiones
             {
                 claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
                 {
+                    new Claim(ClaimTypes.NameIdentifier, sesionUsuario.IdPersona.ToString()),
                     new Claim(ClaimTypes.Name,sesionUsuario.NombreCompleto),
                     new Claim(ClaimTypes.Email,sesionUsuario.Correo),
                     new Claim(ClaimTypes.Role,sesionUsuario.Rol)
@@ -51,6 +52,7 @@ namespace BlazorEcommerce.Client.Extensiones
 
             var claimPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
                 {
+                    new Claim(ClaimTypes.NameIdentifier, sesionUsuario.IdPersona.ToString()),
                     new Claim(ClaimTypes.Name,sesionUsuario.NombreCompleto),
                     new Claim(ClaimTypes.Email,sesionUsuario.Correo),
                     new Claim(ClaimTypes.Role,sesionUsuario.Rol)
