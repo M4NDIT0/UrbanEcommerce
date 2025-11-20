@@ -1,8 +1,10 @@
 ﻿@page "/detalle/{Id:int}"
 @layout TiendaLayout
+@using BlazorEcommerce.Shared
+@using BlazorEcommerce.Client.Servicios
 
 @inject IProductoServicio productoServicio;
-@inject ICarritoServicio carritoServicio
+@inject ICarritoServicio carritoServicio;
 
 <div class="container py-5">
     @if (modelo != null)
@@ -11,7 +13,7 @@
             <!-- Imagen del Producto (Izquierda) -->
             <div class="col-lg-6 d-flex align-items-center">
                 <div class="product-image-container w-100">
-                    <img class="img-fluid rounded shadow-lg" src="@modelo.Imagen" alt="@modelo.Nombre" style="max-height: 600px; object-fit: cover; width: 100%;">
+                    <img class="img-fluid rounded shadow-lg" src="@imagenActual" alt="@modelo.Nombre" style="max-height: 600px; object-fit: cover; width: 100%;">
                 </div>
             </div>
 
@@ -38,6 +40,28 @@
 
                 <!-- Descripción -->
                 <p class="fs-5 text-muted mb-4 lh-lg">@modelo.Descripcion</p>
+
+                <!-- Selector de Colores -->
+                @if (modelo.Variantes != null && modelo.Variantes.Any())
+                {
+                    <div class="color-selector mb-4 p-3 border rounded-3">
+                        <h5 class="mb-3">Colores Disponibles:</h5>
+                        <div class="d-flex flex-wrap gap-3">
+                            @foreach (var variante in modelo.Variantes.Where(v => v.Activo))
+                            {
+                                <div class="color-option @(varianteSeleccionada?.IdVariante == variante.IdVariante ? "selected" : "")" 
+                                     @onclick="() => SeleccionarVariante(variante)">
+                                    <div class="color-circle" 
+                                         style="background-color: @variante.CodigoHex;"
+                                         title="@variante.NombreColor">
+                                    </div>
+                                    <small class="d-block text-center mt-1">@variante.NombreColor</small>
+                                    <small class="text-muted d-block text-center">Stock: @variante.Stock</small>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
 
                 <!-- Cantidad y Botones -->
                 <div class="action-section mb-4">
@@ -67,7 +91,11 @@
                 <!-- Stock Info -->
                 <div class="alert alert-info rounded-3 p-3">
                     <i class="bi bi-info-circle me-2"></i>
-                    <strong>Stock Disponible:</strong> @modelo.Cantidad unidades
+                    <strong>Stock Disponible:</strong> @stockDisponible unidades
+                    @if (varianteSeleccionada != null)
+                    {
+                        <span class="ms-2">(Color: @varianteSeleccionada.NombreColor)</span>
+                    }
                 </div>
             </div>
         </div>
@@ -85,18 +113,58 @@
 @code {
     [Parameter] public int Id { get; set; }
     private ProductoDTO? modelo = null;
+    private ProductoVarianteDTO? varianteSeleccionada = null;
     private int cantidad = 1;
+    private string imagenActual = "";
+    private int stockDisponible = 0;
 
     protected override async Task OnParametersSetAsync()
     {
         var response = await productoServicio.Obtener(Id);
         if (response.EsCorrecto)
+        {
             modelo = (ProductoDTO)response.Resultado!;
+            imagenActual = modelo.Imagen ?? "";
+            stockDisponible = modelo.Cantidad ?? 0;
+
+            // Si tiene variantes, seleccionar la primera por defecto
+            if (modelo.Variantes != null && modelo.Variantes.Any())
+            {
+                var primeraVariante = modelo.Variantes.FirstOrDefault(v => v.Activo);
+                if (primeraVariante != null)
+                {
+                    SeleccionarVariante(primeraVariante);
+                }
+            }
+        }
+    }
+
+    private void SeleccionarVariante(ProductoVarianteDTO variante)
+    {
+        varianteSeleccionada = variante;
+        stockDisponible = variante.Stock;
+
+        // Cambiar imagen a la principal de la variante
+        if (variante.Imagenes != null && variante.Imagenes.Any())
+        {
+            var imagenPrincipal = variante.Imagenes.FirstOrDefault(i => i.EsPrincipal);
+            imagenActual = imagenPrincipal?.Url ?? variante.Imagenes.FirstOrDefault()?.Url ?? modelo?.Imagen ?? "";
+        }
+        else
+        {
+            imagenActual = modelo?.Imagen ?? "";
+        }
+
+        // Resetear cantidad si excede el stock
+        if (cantidad > stockDisponible)
+        {
+            cantidad = 1;
+        }
     }
 
     private void IncrementarClick()
     {
-        if (modelo != null && cantidad < modelo.Cantidad)
+        if (cantidad < stockDisponible)
             cantidad++;
     }
 
@@ -114,7 +182,9 @@
                 Producto = modelo,
                 Cantidad = cantidad,
                 Precio = precioFinal,
-                Total = Convert.ToDecimal(cantidad) * precioFinal
+                Total = Convert.ToDecimal(cantidad) * precioFinal,
+                IdVariante = varianteSeleccionada?.IdVariante,
+                ColorSeleccionado = varianteSeleccionada?.NombreColor
             };
         await carritoServicio.AgregarCarrito(carrito);
     }

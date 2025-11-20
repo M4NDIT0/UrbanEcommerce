@@ -35,6 +35,19 @@ namespace BlazorEcommerce.Server.Utilidades
             CreateMap<Venta, VentaDTO>();
             CreateMap<VentaDTO, Venta>();
             #endregion Venta
+
+            #region ProductoVariante
+            CreateMap<ProductoVariante, ProductoVarianteDTO>();
+            CreateMap<ProductoVarianteDTO, ProductoVariante>()
+                .ForMember(destino => destino.IdProductoNavigation, opt => opt.Ignore())
+                .ForMember(destino => destino.Imagenes, opt => opt.Ignore());
+            #endregion ProductoVariante
+
+            #region ProductoImagen
+            CreateMap<ProductoImagen, ProductoImagenDTO>();
+            CreateMap<ProductoImagenDTO, ProductoImagen>()
+                .ForMember(destino => destino.IdVarianteNavigation, opt => opt.Ignore());
+            #endregion ProductoImagen
         }
     }
 }

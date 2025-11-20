@@ -23,6 +23,10 @@ public partial class DbtiendaBlazorContext : DbContext
 
     public virtual DbSet<Producto> Productos { get; set; }
 
+    public virtual DbSet<ProductoVariante> ProductoVariantes { get; set; }
+
+    public virtual DbSet<ProductoImagen> ProductoImagenes { get; set; }
+
     public virtual DbSet<Venta> Venta { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
@@ -101,6 +105,54 @@ public partial class DbtiendaBlazorContext : DbContext
             entity.HasOne(d => d.IdCategoriaNavigation).WithMany(p => p.Productos)
                 .HasForeignKey(d => d.IdCategoria)
                 .HasConstraintName("FK__Producto__IdCate__1367E606");
+        });
+
+        modelBuilder.Entity<ProductoVariante>(entity =>
+        {
+            entity.HasKey(e => e.IdVariante).HasName("PK__Producto__B223ACACA09B8B64");
+
+            entity.ToTable("ProductoVariante");
+
+            entity.Property(e => e.NombreColor)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.CodigoHex)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+            entity.Property(e => e.SKU)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.FechaCreacion)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.Activo)
+                .HasDefaultValue(true);
+
+            entity.HasOne(d => d.IdProductoNavigation).WithMany(p => p.Variantes)
+                .HasForeignKey(d => d.IdProducto)
+                .HasConstraintName("FK__ProductoV__IdPro__2B3F6F97");
+        });
+
+        modelBuilder.Entity<ProductoImagen>(entity =>
+        {
+            entity.HasKey(e => e.IdImagen).HasName("PK__Producto__B6D29ADBF1C8E8A3");
+
+            entity.ToTable("ProductoImagen");
+
+            entity.Property(e => e.Url)
+                .HasMaxLength(500)
+                .IsUnicode(false);
+            entity.Property(e => e.FechaCreacion)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.EsPrincipal)
+                .HasDefaultValue(false);
+            entity.Property(e => e.Orden)
+                .HasDefaultValue(0);
+
+            entity.HasOne(d => d.IdVarianteNavigation).WithMany(p => p.Imagenes)
+                .HasForeignKey(d => d.IdVariante)
+                .HasConstraintName("FK__ProductoI__IdVar__2E1BDC42");
         });
 
         modelBuilder.Entity<Venta>(entity =>

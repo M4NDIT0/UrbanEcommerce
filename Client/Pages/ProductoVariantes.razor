@@ -1,0 +1,464 @@
+@page "/producto/{IdProducto:int}/variantes"
+@using Microsoft.AspNetCore.Components.Forms
+@inject IProductoServicio _productoServicio
+@inject IProductoVarianteServicio _varianteServicio
+@inject NavigationManager _navServicio
+@inject IToastService toastService
+@inject SweetAlertService Swal
+@attribute [Authorize(Roles = "Usuario")]
+
+<div class="container-fluid mt-3">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="text-danger">
+                    <i class="fa fa-palette me-2"></i>
+                    Gestionar Variantes - @nombreProducto
+                </h3>
+                <button class="btn btn-outline-danger" @onclick="Volver">
+                    <i class="fa fa-arrow-left me-2"></i>Volver a Productos
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulario para nueva variante -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">
+                        <i class="fa fa-plus-circle me-2"></i>
+                        @(varianteEditando == null ? "Agregar Nueva Variante" : "Editar Variante")
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Nombre del Color</label>
+                            <input type="text" class="form-control" @bind="nuevaVariante.NombreColor" placeholder="Ej: Rojo, Azul, Negro">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label fw-bold">Código Hex</label>
+                            <input type="color" class="form-control form-control-color w-100" @bind="nuevaVariante.CodigoHex" title="Selecciona el color">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label fw-bold">Stock</label>
+                            <input type="number" class="form-control" @bind="nuevaVariante.Stock" min="0">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label fw-bold">SKU</label>
+                            <input type="text" class="form-control" @bind="nuevaVariante.SKU" placeholder="URB-XXX-001">
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" @bind="nuevaVariante.Activo" id="activoCheck">
+                                <label class="form-check-label" for="activoCheck">Activo</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Subir imágenes -->
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Imágenes del Producto</label>
+                            <div class="mb-3">
+                                <InputFile OnChange="SubirImagen" class="form-control" accept="image/*" multiple />
+                                <small class="text-muted">Formatos permitidos: JPG, PNG, GIF, WEBP. Máximo 5MB por imagen.</small>
+                            </div>
+                            
+                            @if (subiendoImagen)
+                            {
+                                <div class="alert alert-info">
+                                    <span class="spinner-border spinner-border-sm me-2"></span>
+                                    Subiendo imagen(s)...
+                                </div>
+                            }
+                            
+                            @if (nuevaVariante.Imagenes.Any())
+                            {
+                                <div class="list-group mt-2">
+                                    @foreach (var (img, index) in nuevaVariante.Imagenes.Select((x, i) => (x, i)))
+                                    {
+                                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-center">
+                                                <img src="@img.Url" class="rounded me-3" style="width: 60px; height: 60px; object-fit: cover;" alt="Preview">
+                                                <div>
+                                                    <small class="text-muted d-block">@img.Url</small>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="imagenPrincipal" 
+                                                               checked="@img.EsPrincipal" @onchange="() => MarcarComoPrincipal(index)">
+                                                        <label class="form-check-label">Principal</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button class="btn btn-sm btn-danger" @onclick="() => EliminarUrlImagen(index)">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-12 text-end">
+                            @if (varianteEditando != null)
+                            {
+                                <button class="btn btn-secondary me-2" @onclick="CancelarEdicion">
+                                    <i class="fa fa-times me-1"></i>Cancelar
+                                </button>
+                            }
+                            <button class="btn btn-success" @onclick="GuardarVariante" disabled="@guardando">
+                                @if (guardando)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-2"></span>
+                                }
+                                <i class="fa fa-save me-1"></i>
+                                @(varianteEditando == null ? "Guardar Variante" : "Actualizar Variante")
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lista de variantes existentes -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        <i class="fa fa-list me-2"></i>Variantes Existentes
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if (cargando)
+                    {
+                        <div class="text-center py-5">
+                            <div class="spinner-border text-danger" role="status">
+                                <span class="visually-hidden">Cargando...</span>
+                            </div>
+                        </div>
+                    }
+                    else if (!listaVariantes.Any())
+                    {
+                        <div class="alert alert-info">
+                            <i class="fa fa-info-circle me-2"></i>
+                            No hay variantes registradas para este producto. Agrega la primera variante usando el formulario superior.
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Color</th>
+                                        <th>Nombre</th>
+                                        <th>Stock</th>
+                                        <th>SKU</th>
+                                        <th>Imágenes</th>
+                                        <th>Estado</th>
+                                        <th class="text-center">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var variante in listaVariantes)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div style="width: 40px; height: 40px; background-color: @variante.CodigoHex; border-radius: 50%; border: 2px solid #ddd;"></div>
+                                                </div>
+                                            </td>
+                                            <td class="fw-bold">@variante.NombreColor</td>
+                                            <td>
+                                                <span class="badge @(variante.Stock > 10 ? "bg-success" : variante.Stock > 0 ? "bg-warning" : "bg-danger")">
+                                                    @variante.Stock unidades
+                                                </span>
+                                            </td>
+                                            <td><code>@variante.SKU</code></td>
+                                            <td>
+                                                @if (variante.Imagenes.Any())
+                                                {
+                                                    <div class="d-flex gap-1">
+                                                        @foreach (var img in variante.Imagenes.Take(3))
+                                                        {
+                                                            <img src="@img.Url" class="rounded" style="width: 30px; height: 30px; object-fit: cover;" title="@(img.EsPrincipal ? "Principal" : "")">
+                                                        }
+                                                        @if (variante.Imagenes.Count > 3)
+                                                        {
+                                                            <span class="badge bg-secondary align-self-center">+@(variante.Imagenes.Count - 3)</span>
+                                                        }
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">Sin imágenes</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <span class="badge @(variante.Activo ? "bg-success" : "bg-secondary")">
+                                                    @(variante.Activo ? "Activo" : "Inactivo")
+                                                </span>
+                                            </td>
+                                            <td class="text-center">
+                                                <button class="btn btn-sm btn-outline-primary me-1" @onclick="() => EditarVariante(variante)" title="Editar">
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-danger" @onclick="() => ConfirmarEliminar(variante)" title="Eliminar">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public int IdProducto { get; set; }
+
+    private string nombreProducto = "";
+    private List<ProductoVarianteDTO> listaVariantes = new();
+    private ProductoVarianteDTO nuevaVariante = new() { Activo = true, Imagenes = new List<ProductoImagenDTO>() };
+    private ProductoVarianteDTO? varianteEditando = null;
+    private bool cargando = false;
+    private bool guardando = false;
+    private bool subiendoImagen = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarProducto();
+        await CargarVariantes();
+    }
+
+    private async Task CargarProducto()
+    {
+        var response = await _productoServicio.Obtener(IdProducto);
+        if (response != null && response.EsCorrecto && response.Resultado != null)
+        {
+            var producto = (ProductoDTO)response.Resultado;
+            nombreProducto = producto.Nombre ?? "Producto";
+        }
+    }
+
+    private async Task CargarVariantes()
+    {
+        cargando = true;
+        var response = await _varianteServicio.ObtenerPorProducto(IdProducto);
+        if (response != null && response.EsCorrecto && response.Resultado != null)
+        {
+            listaVariantes = response.Resultado;
+        }
+        cargando = false;
+    }
+
+    private async Task SubirImagen(InputFileChangeEventArgs e)
+    {
+        subiendoImagen = true;
+        try
+        {
+            foreach (var archivo in e.GetMultipleFiles(10)) // Máximo 10 archivos
+            {
+                // Validar tamaño
+                if (archivo.Size > 5 * 1024 * 1024)
+                {
+                    toastService.ShowWarning($"El archivo {archivo.Name} supera los 5MB");
+                    continue;
+                }
+
+                // Crear contenido multipart
+                var content = new MultipartFormDataContent();
+                var streamContent = new StreamContent(archivo.OpenReadStream(5 * 1024 * 1024));
+                streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(archivo.ContentType);
+                content.Add(streamContent, "archivo", archivo.Name);
+
+                // Subir al servidor
+                var http = new HttpClient { BaseAddress = new Uri(_navServicio.BaseUri) };
+                var response = await http.PostAsync("api/Archivo/subir", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var jsonResponse = await response.Content.ReadAsStringAsync();
+                    var resultado = System.Text.Json.JsonDocument.Parse(jsonResponse);
+                    var url = resultado.RootElement.GetProperty("url").GetString();
+
+                    if (!string.IsNullOrEmpty(url))
+                    {
+                        nuevaVariante.Imagenes.Add(new ProductoImagenDTO
+                        {
+                            Url = url,
+                            EsPrincipal = !nuevaVariante.Imagenes.Any(),
+                            Orden = nuevaVariante.Imagenes.Count
+                        });
+                    }
+                }
+                else
+                {
+                    toastService.ShowError($"Error al subir {archivo.Name}");
+                }
+            }
+
+            if (nuevaVariante.Imagenes.Any())
+            {
+                toastService.ShowSuccess("Imágenes subidas correctamente");
+            }
+        }
+        catch (Exception ex)
+        {
+            toastService.ShowError($"Error: {ex.Message}");
+        }
+        finally
+        {
+            subiendoImagen = false;
+        }
+    }
+
+    private void EliminarUrlImagen(int index)
+    {
+        nuevaVariante.Imagenes.RemoveAt(index);
+        // Reordenar
+        for (int i = 0; i < nuevaVariante.Imagenes.Count; i++)
+        {
+            nuevaVariante.Imagenes[i].Orden = i;
+        }
+        // Si se eliminó la principal, marcar la primera como principal
+        if (nuevaVariante.Imagenes.Any() && !nuevaVariante.Imagenes.Any(x => x.EsPrincipal))
+        {
+            nuevaVariante.Imagenes[0].EsPrincipal = true;
+        }
+    }
+
+    private void MarcarComoPrincipal(int index)
+    {
+        foreach (var img in nuevaVariante.Imagenes)
+        {
+            img.EsPrincipal = false;
+        }
+        nuevaVariante.Imagenes[index].EsPrincipal = true;
+    }
+
+    private async Task GuardarVariante()
+    {
+        if (string.IsNullOrWhiteSpace(nuevaVariante.NombreColor))
+        {
+            toastService.ShowWarning("Ingresa el nombre del color");
+            return;
+        }
+
+        guardando = true;
+
+        try
+        {
+            nuevaVariante.IdProducto = IdProducto;
+
+            if (varianteEditando == null)
+            {
+                // Crear nueva
+                var response = await _varianteServicio.Crear(nuevaVariante);
+                if (response != null && response.EsCorrecto)
+                {
+                    toastService.ShowSuccess("Variante creada correctamente");
+                    LimpiarFormulario();
+                    await CargarVariantes();
+                }
+                else
+                {
+                    toastService.ShowError(response?.Mensaje ?? "Error al crear variante");
+                }
+            }
+            else
+            {
+                // Editar existente
+                var response = await _varianteServicio.Editar(nuevaVariante);
+                if (response != null && response.EsCorrecto)
+                {
+                    toastService.ShowSuccess("Variante actualizada correctamente");
+                    LimpiarFormulario();
+                    await CargarVariantes();
+                }
+                else
+                {
+                    toastService.ShowError(response?.Mensaje ?? "Error al actualizar variante");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            toastService.ShowError($"Error: {ex.Message}");
+        }
+        finally
+        {
+            guardando = false;
+        }
+    }
+
+    private void EditarVariante(ProductoVarianteDTO variante)
+    {
+        varianteEditando = variante;
+        nuevaVariante = new ProductoVarianteDTO
+        {
+            IdVariante = variante.IdVariante,
+            IdProducto = variante.IdProducto,
+            NombreColor = variante.NombreColor,
+            CodigoHex = variante.CodigoHex,
+            Stock = variante.Stock,
+            SKU = variante.SKU,
+            Activo = variante.Activo,
+            Imagenes = new List<ProductoImagenDTO>(variante.Imagenes)
+        };
+    }
+
+    private void CancelarEdicion()
+    {
+        LimpiarFormulario();
+    }
+
+    private void LimpiarFormulario()
+    {
+        nuevaVariante = new ProductoVarianteDTO { Activo = true, Imagenes = new List<ProductoImagenDTO>() };
+        varianteEditando = null;
+    }
+
+    private async Task ConfirmarEliminar(ProductoVarianteDTO variante)
+    {
+        var result = await Swal.FireAsync(new SweetAlertOptions
+        {
+            Title = "¿Eliminar variante?",
+            Text = $"Se eliminará la variante '{variante.NombreColor}' y todas sus imágenes",
+            Icon = SweetAlertIcon.Warning,
+            ShowCancelButton = true,
+            ConfirmButtonText = "Sí, eliminar",
+            CancelButtonText = "Cancelar"
+        });
+
+        if (result.IsConfirmed)
+        {
+            var response = await _varianteServicio.Eliminar(variante.IdVariante);
+            if (response != null && response.EsCorrecto)
+            {
+                toastService.ShowSuccess("Variante eliminada correctamente");
+                await CargarVariantes();
+            }
+            else
+            {
+                toastService.ShowError(response?.Mensaje ?? "Error al eliminar variante");
+            }
+        }
+    }
+
+    private void Volver()
+    {
+        _navServicio.NavigateTo("/productos");
+    }
+}

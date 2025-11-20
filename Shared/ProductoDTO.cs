@@ -29,5 +29,8 @@ namespace BlazorEcommerce.Shared
 
         public virtual CategoriaDTO? IdCategoriaNavigation { get; set; }
 
+        // Lista de variantes de color del producto
+        public List<ProductoVarianteDTO> Variantes { get; set; } = new List<ProductoVarianteDTO>();
+
     }
 }

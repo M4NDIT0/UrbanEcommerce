@@ -12,5 +12,9 @@ namespace BlazorEcommerce.Shared
         public int? Cantidad { get; set; }
         public decimal? Precio { get; set; }
         public decimal? Total { get; set; }
+        
+        // Información de la variante seleccionada
+        public int? IdVariante { get; set; }
+        public string? ColorSeleccionado { get; set; }
     }
 }

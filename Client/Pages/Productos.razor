@@ -55,10 +55,22 @@
                     </div>
                     <!-- Product actions-->
                     <div class="card-footer bg-transparent">
-                        <div class="row justify-content-between">
-                            <a class="col-5 btn btn-sm btn-outline-primary mt-auto" href="/producto/@item.IdProducto"><i class="oi oi-pencil fs-5"></i></a>
-                            <button class="col-5 btn btn-sm btn-outline-danger mt-auto" @onclick="(async () => await Eliminar(item))">
-                                <i class="oi oi-trash fs-5"></i></button>
+                        <div class="row justify-content-between g-2">
+                            <div class="col-12 mb-2">
+                                <a class="btn btn-sm btn-outline-success w-100" href="/producto/@item.IdProducto/variantes" title="Gestionar variantes de color">
+                                    <i class="fa fa-palette"></i> Variantes
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a class="btn btn-sm btn-outline-primary w-100" href="/producto/@item.IdProducto" title="Editar producto">
+                                    <i class="oi oi-pencil"></i> Editar
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <button class="btn btn-sm btn-outline-danger w-100" @onclick="(async () => await Eliminar(item))" title="Eliminar producto">
+                                    <i class="oi oi-trash"></i> Eliminar
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

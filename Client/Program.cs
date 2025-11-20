@@ -19,6 +19,7 @@ builder.Services.AddScoped<IPersonaServicio,PersonaServicio>();
 builder.Services.AddScoped<IPerfilServicio, PerfilServicio>();
 builder.Services.AddScoped<ICategoriaServicio,CategoriaServicio>();
 builder.Services.AddScoped<IProductoServicio,ProductoServicio>();
+builder.Services.AddScoped<IProductoVarianteServicio, ProductoVarianteServicio>();
 builder.Services.AddScoped<ICarritoServicio,CarritoServicio>();
 builder.Services.AddScoped<IVentaServicio,VentaServicio>();
 builder.Services.AddScoped<IDashboardServicio, DashboardServicio>();

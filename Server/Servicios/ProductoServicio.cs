@@ -31,7 +31,10 @@ namespace BlazorEcommerce.Server.Servicios
                     c.Nombre!.ToLower().Contains(Valor.ToLower())
                 );
 
-                consulta = consulta.Include(c => c.IdCategoriaNavigation);
+                consulta = consulta
+                    .Include(c => c.IdCategoriaNavigation)
+                    .Include(c => c.Variantes)
+                        .ThenInclude(v => v.Imagenes);
 
                 List<ProductoDTO> lista = _mapper.Map<List<ProductoDTO>>(await consulta.ToListAsync());
                 response.Resultado = lista;
@@ -61,7 +64,10 @@ namespace BlazorEcommerce.Server.Servicios
                     c.IdCategoriaNavigation.Nombre.ToLower().Contains(categoria.ToLower())
                 );
 
-                consulta = consulta.Include(c => c.IdCategoriaNavigation);
+                consulta = consulta
+                    .Include(c => c.IdCategoriaNavigation)
+                    .Include(c => c.Variantes)
+                        .ThenInclude(v => v.Imagenes);
 
                 List<ProductoDTO> lista = _mapper.Map<List<ProductoDTO>>(await consulta.ToListAsync());
                 response.Resultado = lista;
@@ -116,7 +122,10 @@ namespace BlazorEcommerce.Server.Servicios
             try
             {
                 var consulta = _productoRepositorio.Consultar(p => p.IdProducto == id);
-                consulta = consulta.Include(c => c.IdCategoriaNavigation);
+                consulta = consulta
+                    .Include(c => c.IdCategoriaNavigation)
+                    .Include(c => c.Variantes)
+                        .ThenInclude(v => v.Imagenes);
                 var fromDbModelo = await consulta.FirstOrDefaultAsync();
 
                 if (fromDbModelo != null)
